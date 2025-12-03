@@ -1,0 +1,17 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+crash.log
+*.tfvars
+
+# Python
+__pycache__/
+*.pyc
+venv/
+
+# Node
+node_modules/
+
+# VS Code
+.vscode/
