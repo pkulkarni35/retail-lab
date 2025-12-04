@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Retail Lab Frontend</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 20px; }
+    h1 { margin-bottom: 4px; }
+    .card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+      max-width: 480px;
+    }
+    button { padding: 6px 12px; cursor: pointer; }
+    pre { background: #f5f5f5; padding: 8px; border-radius: 4px; max-height: 200px; overflow: auto; }
+    label { display: block; margin-top: 6px; }
+    input { width: 100%; padding: 4px; margin-top: 2px; }
+  </style>
+</head>
+<body>
+  <h1>Retail Lab – Demo UI</h1>
+  <p>Cart → Checkout → Payment using your Cloud Run services.</p>
+
+  <div class="card">
+    <h2>Add to Cart</h2>
+    <label>Item ID <input id="cart-item-id" value="sku-123" /></label>
+    <label>Name <input id="cart-name" value="Shoe" /></label>
+    <label>Qty <input id="cart-qty" type="number" value="1" /></label>
+    <button onclick="addToCart()">Add to Cart</button>
+    <pre id="cart-output"></pre>
+  </div>
+
+  <div class="card">
+    <h2>Checkout</h2>
+    <label>User ID <input id="checkout-user" value="user-1" /></label>
+    <label>Cart Total <input id="checkout-total" type="number" value="199.99" /></label>
+    <button onclick="checkout()">Checkout</button>
+    <pre id="checkout-output"></pre>
+  </div>
+
+  <div class="card">
+    <h2>Payment</h2>
+    <label>Amount <input id="pay-amount" type="number" value="120.50" /></label>
+    <label>Currency <input id="pay-currency" value="USD" /></label>
+    <button onclick="pay()">Pay</button>
+    <pre id="payment-output"></pre>
+  </div>
+
+  <script>
+    const CART_URL     = "https://cart-service-mn3rduvdya-el.a.run.app";
+    const CHECKOUT_URL = "https://checkout-service-mn3rduvdya-el.a.run.app";
+    const PAYMENT_URL  = "https://payment-service-mn3rduvdya-el.a.run.app";
+
+    async function addToCart() {
+      const body = {
+        item_id: document.getElementById("cart-item-id").value,
+        name: document.getElementById("cart-name").value,
+        qty: Number(document.getElementById("cart-qty").value || 1)
+      };
+      try {
+        const res = await fetch(`${CART_URL}/cart/add`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body)
+        });
+        const data = await res.json();
+        document.getElementById("cart-output").textContent =
+          JSON.stringify(data, null, 2);
+      } catch (e) {
+        document.getElementById("cart-output").textContent = String(e);
+      }
+    }
+
+    async function checkout() {
+      const body = {
+        user_id: document.getElementById("checkout-user").value,
+        cart_total: Number(document.getElementById("checkout-total").value || 0)
+      };
+      try {
+        const res = await fetch(`${CHECKOUT_URL}/checkout`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body)
+        });
+        const data = await res.json();
+        document.getElementById("checkout-output").textContent =
+          JSON.stringify(data, null, 2);
+      } catch (e) {
+        document.getElementById("checkout-output").textContent = String(e);
+      }
+    }
+
+    async function pay() {
+      const body = {
+        amount: Number(document.getElementById("pay-amount").value || 0),
+        currency: document.getElementById("pay-currency").value
+      };
+      try {
+        const res = await fetch(`${PAYMENT_URL}/pay`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body)
+        });
+        const data = await res.json();
+        document.getElementById("payment-output").textContent =
+          JSON.stringify(data, null, 2);
+      } catch (e) {
+        document.getElementById("payment-output").textContent = String(e);
+      }
+    }
+  </script>
+</body>
+</html>

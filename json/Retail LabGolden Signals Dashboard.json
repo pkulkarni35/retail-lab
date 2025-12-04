@@ -1,0 +1,87 @@
+{
+  "title": "Retail Lab – Golden Signals",
+  "description": "Latency, traffic, errors, and saturation for cart, checkout, and payment.",
+  "layout_type": "ordered",
+  "widgets": [
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Latency – Checkout p95 (ms)",
+        "requests": [
+          {
+            "q": "p95:retail.checkout.latency_ms{env:retail-lab}",
+            "display_type": "line"
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Traffic – Requests per Service (Checkout & Payment)",
+        "requests": [
+          {
+            "q": "sum:retail.checkout.requests{env:retail-lab}.as_count()",
+            "display_type": "line"
+          },
+          {
+            "q": "sum:retail.payment.requests{env:retail-lab}.as_count()",
+            "display_type": "line"
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Errors – Checkout & Payment (failed status)",
+        "requests": [
+          {
+            "q": "sum:retail.checkout.requests{env:retail-lab,status:failed}.as_count()",
+            "display_type": "bars"
+          },
+          {
+            "q": "sum:retail.payment.requests{env:retail-lab,status:failed}.as_count()",
+            "display_type": "bars"
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Saturation – Cloud Run CPU Utilization (by service)",
+        "requests": [
+          {
+            "q": "avg:gcp.cloud_run.container.cpu.utilization{project:retail-lab-praveen} by {service}",
+            "display_type": "line"
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Saturation – Cloud Run Memory Utilization (by service)",
+        "requests": [
+          {
+            "q": "avg:gcp.cloud_run.container.memory.utilization{project:retail-lab-praveen} by {service}",
+            "display_type": "line"
+          }
+        ]
+      }
+    }
+  ],
+  "template_variables": [
+    {
+      "name": "env",
+      "default": "retail-lab",
+      "prefix": "env"
+    },
+    {
+      "name": "project",
+      "default": "retail-lab-praveen",
+      "prefix": "project"
+    }
+  ]
+}

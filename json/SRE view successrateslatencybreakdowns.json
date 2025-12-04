@@ -1,0 +1,86 @@
+{
+  "title": "SRE View – Success Rates & Latency Breakdowns",
+  "description": "Dashboard showing reliability, latency and performance KPIs for retail lab services.",
+  "layout_type": "ordered",
+  "widgets": [
+    {
+      "definition": {
+        "title": "Checkout Success Rate",
+        "type": "query_value",
+        "requests": [
+          {
+            "q": "100 * (sum:retail.checkout.requests{status:success} / sum:retail.checkout.requests{*})",
+            "aggregator": "avg"
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 0,
+        "width": 4,
+        "height": 4
+      }
+    },
+    {
+      "definition": {
+        "title": "Checkout Latency (P95)",
+        "type": "query_value",
+        "requests": [
+          {
+            "q": "p95:retail.checkout.latency{*}",
+            "aggregator": "last"
+          }
+        ]
+      },
+      "layout": {
+        "x": 5,
+        "y": 0,
+        "width": 4,
+        "height": 4
+      }
+    },
+    {
+      "definition": {
+        "title": "Payment Failures",
+        "type": "timeseries",
+        "requests": [
+          {
+            "q": "sum:retail.payment.requests{status:failed}.as_count()",
+            "display_type": "bars"
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 5,
+        "width": 8,
+        "height": 6
+      }
+    },
+    {
+      "definition": {
+        "title": "Cart Add/Remove Volume",
+        "type": "timeseries",
+        "requests": [
+          {
+            "q": "sum:retail.cart.events{*}.as_count()",
+            "display_type": "line"
+          }
+        ]
+      },
+      "layout": {
+        "x": 0,
+        "y": 12,
+        "width": 8,
+        "height": 6
+      }
+    }
+  ],
+  "template_variables": [
+    {
+      "name": "service",
+      "prefix": "service",
+      "default": "*"
+    }
+  ]
+}

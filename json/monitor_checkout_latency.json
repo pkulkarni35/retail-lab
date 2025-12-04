@@ -1,0 +1,26 @@
+{
+  "name": "[Retail Lab] High latency on checkout (p95 > 900ms)",
+  "type": "metric alert",
+  "query": "avg(last_5m):p95:retail.checkout.latency_ms{env:retail-lab} > 900",
+  "message": "Checkout latency (p95) is above 900ms in retail-lab.\n\nPlease investigate recent deployments, Cloud Run scaling, and downstream dependencies.\n\n@pagerduty @slack-retail-sre",
+  "tags": [
+    "env:retail-lab",
+    "service:checkout",
+    "retail_lab",
+    "category:latency"
+  ],
+  "options": {
+    "thresholds": {
+      "critical": 900,
+      "warning": 700
+    },
+    "notify_no_data": false,
+    "no_data_timeframe": 10,
+    "notify_audit": false,
+    "include_tags": true,
+    "require_full_window": true,
+    "evaluation_delay": 300,
+    "new_host_delay": 300,
+    "escalation_message": "Latency has been high for a sustained period. Escalate to on-call SRE if not acknowledged."
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "name": "[Retail Lab] Payment failures spike (failed > 5 in 5m)",
+  "type": "metric alert",
+  "query": "sum(last_5m):sum:retail.payment.requests{env:retail-lab,status:failed}.as_count() > 5",
+  "message": "Payment failures are above normal in retail-lab (more than 5 failed requests in the last 5 minutes).\n\nCheck payment-service logs, dependency health (gateway, PSP), and recent config changes.\n\n@pagerduty @slack-retail-sre",
+  "tags": [
+    "env:retail-lab",
+    "service:payment",
+    "retail_lab",
+    "category:errors"
+  ],
+  "options": {
+    "thresholds": {
+      "critical": 5,
+      "warning": 2
+    },
+    "notify_no_data": false,
+    "no_data_timeframe": 10,
+    "notify_audit": false,
+    "include_tags": true,
+    "require_full_window": true,
+    "evaluation_delay": 300,
+    "new_host_delay": 300,
+    "escalation_message": "Payment failures remain elevated. Escalate to on-call if this persists."
+  }
+}

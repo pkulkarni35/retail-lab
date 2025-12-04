@@ -1,0 +1,91 @@
+{
+  "title": "Retail Lab – Cloud Run Infra",
+  "description": "Cloud Run infra health for cart, checkout, payment services.",
+  "layout_type": "ordered",
+  "widgets": [
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Cloud Run Requests per Second (all retail services)",
+        "requests": [
+          {
+            "q": "sum:gcp.cloud_run.request_count{project:retail-lab-praveen} by {service}",
+            "display_type": "line"
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Cloud Run Error Rate (4xx/5xx)",
+        "requests": [
+          {
+            "q": "100 * ( sum:gcp.cloud_run.request_count{project:retail-lab-praveen,response_code:5xx} / sum:gcp.cloud_run.request_count{project:retail-lab-praveen} )",
+            "display_type": "line"
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Cloud Run Container CPU Utilization",
+        "requests": [
+          {
+            "q": "avg:gcp.cloud_run.container.cpu.utilization{project:retail-lab-praveen} by {service}",
+            "display_type": "line"
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Cloud Run Container Memory Utilization",
+        "requests": [
+          {
+            "q": "avg:gcp.cloud_run.container.memory.utilization{project:retail-lab-praveen} by {service}",
+            "display_type": "line"
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Cloud Run Running Instance Count",
+        "requests": [
+          {
+            "q": "sum:gcp.cloud_run.running_instance_count{project:retail-lab-praveen} by {service}",
+            "display_type": "line"
+          }
+        ]
+      }
+    },
+    {
+      "definition": {
+        "type": "timeseries",
+        "title": "Cloud Run Cold Starts (if enhanced metrics enabled)",
+        "requests": [
+          {
+            "q": "sum:gcp.cloud_run.enhanced.cold_start_count{project:retail-lab-praveen} by {service}",
+            "display_type": "bars"
+          }
+        ]
+      }
+    }
+  ],
+  "template_variables": [
+    {
+      "name": "project",
+      "default": "retail-lab-praveen",
+      "prefix": "project"
+    },
+    {
+      "name": "service",
+      "default": "*",
+      "prefix": "service"
+    }
+  ]
+}

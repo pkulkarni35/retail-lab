@@ -1,0 +1,26 @@
+{
+  "name": "[Retail Lab] Cloud Run CPU high (> 80%)",
+  "type": "metric alert",
+  "query": "avg(last_5m):avg:gcp.cloud_run.container.cpu.utilization{project:retail-lab-praveen} by {service} > 0.8",
+  "message": "Cloud Run CPU utilization is above 80% for one or more services in project retail-lab-praveen.\n\nReview autoscaling settings, incoming traffic, and downstream latency.\n\n@pagerduty @slack-retail-sre",
+  "tags": [
+    "env:retail-lab",
+    "project:retail-lab-praveen",
+    "retail_lab",
+    "category:saturation"
+  ],
+  "options": {
+    "thresholds": {
+      "critical": 0.8,
+      "warning": 0.6
+    },
+    "notify_no_data": false,
+    "no_data_timeframe": 10,
+    "notify_audit": false,
+    "include_tags": true,
+    "require_full_window": true,
+    "evaluation_delay": 300,
+    "new_host_delay": 300,
+    "escalation_message": "Sustained high CPU – may indicate underprovisioned Cloud Run min instances or traffic spike."
+  }
+}
